@@ -11,13 +11,13 @@
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>com.googleusercontent.apps.841077018919-978flnqdu54q5lb5e56od2jr2oha90ll</string>
+                <string>com.googleusercontent.apps.201686143127-l3dmqc7v1v8l3qcrkf0l2uvron4lm9ai</string>
             </array>
         </dict>
     </array>
 
     <key>GIDClientID</key>
-    <string>841077018919-978flnqdu54q5lb5e56od2jr2oha90ll.apps.googleusercontent.com</string>
+    <string>201686143127-l3dmqc7v1v8l3qcrkf0l2uvron4lm9ai.apps.googleusercontent.com</string>
 
     <key>NSCameraUsageDescription</key>
     <string>This app needs access to camera permission</string>

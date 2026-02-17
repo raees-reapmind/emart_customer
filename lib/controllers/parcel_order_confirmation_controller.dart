@@ -96,11 +96,16 @@ class ParcelOrderConfirmationController extends GetxController {
     subTotal.value = double.tryParse(parcelOrder.value.subTotal ?? '0') ?? 0.0;
 
     if (selectedCouponModel.value.id != null) {
-      discount.value = Constant.calculateDiscount(amount: subTotal.value.toString(), offerModel: selectedCouponModel.value);
+      discount.value = Constant.calculateDiscount(
+        amount: subTotal.value.toString(),
+        offerModel: selectedCouponModel.value,
+      );
     }
 
     for (var element in Constant.taxList) {
-      taxAmount.value = (taxAmount.value + Constant.calculateTax(amount: (subTotal.value - discount.value).toString(), taxModel: element));
+      taxAmount.value =
+          (taxAmount.value +
+              Constant.calculateTax(amount: (subTotal.value - discount.value).toString(), taxModel: element));
     }
 
     print("Tax: ${taxAmount.value}");
@@ -150,8 +155,14 @@ class ParcelOrderConfirmationController extends GetxController {
       parcelOrder.value.authorID = FireStoreUtils.getCurrentUid();
       parcelOrder.value.paymentMethod = paymentBy.value == "Receiver" ? "cod" : selectedPaymentMethod.value;
       parcelOrder.value.paymentCollectByReceiver = paymentBy.value == "Receiver";
-      parcelOrder.value.senderZoneId = Constant.getZoneId(parcelOrder.value.senderLatLong!.latitude ?? 0.0, parcelOrder.value.senderLatLong!.longitude ?? 0.0);
-      parcelOrder.value.receiverZoneId = Constant.getZoneId(parcelOrder.value.receiverLatLong!.latitude ?? 0.0, parcelOrder.value.receiverLatLong!.longitude ?? 0.0);
+      parcelOrder.value.senderZoneId = Constant.getZoneId(
+        parcelOrder.value.senderLatLong!.latitude ?? 0.0,
+        parcelOrder.value.senderLatLong!.longitude ?? 0.0,
+      );
+      parcelOrder.value.receiverZoneId = Constant.getZoneId(
+        parcelOrder.value.receiverLatLong!.latitude ?? 0.0,
+        parcelOrder.value.receiverLatLong!.longitude ?? 0.0,
+      );
 
       if (selectedPaymentMethod.value == PaymentGateway.wallet.name) {
         WalletTransactionModel transactionModel = WalletTransactionModel(
@@ -170,7 +181,10 @@ class ParcelOrderConfirmationController extends GetxController {
 
         await FireStoreUtils.setWalletTransaction(transactionModel).then((value) async {
           if (value == true) {
-            await FireStoreUtils.updateUserWallet(amount: "-${totalAmount.value.toString()}", userId: FireStoreUtils.getCurrentUid());
+            await FireStoreUtils.updateUserWallet(
+              amount: "-${totalAmount.value.toString()}",
+              userId: FireStoreUtils.getCurrentUid(),
+            );
           }
         });
       }
@@ -214,8 +228,12 @@ class ParcelOrderConfirmationController extends GetxController {
       midTransModel.value = MidTrans.fromJson(jsonDecode(Preferences.getString(Preferences.midTransSettings)));
       orangeMoneyModel.value = OrangeMoney.fromJson(jsonDecode(Preferences.getString(Preferences.orangeMoneySettings)));
       xenditModel.value = Xendit.fromJson(jsonDecode(Preferences.getString(Preferences.xenditSettings)));
-      walletSettingModel.value = WalletSettingModel.fromJson(jsonDecode(Preferences.getString(Preferences.walletSettings)));
-      cashOnDeliverySettingModel.value = CodSettingModel.fromJson(jsonDecode(Preferences.getString(Preferences.codSettings)));
+      walletSettingModel.value = WalletSettingModel.fromJson(
+        jsonDecode(Preferences.getString(Preferences.walletSettings)),
+      );
+      cashOnDeliverySettingModel.value = CodSettingModel.fromJson(
+        jsonDecode(Preferences.getString(Preferences.codSettings)),
+      );
 
       if (walletSettingModel.value.isEnabled == true) {
         selectedPaymentMethod.value = PaymentGateway.wallet.name;
@@ -327,7 +345,10 @@ class ParcelOrderConfirmationController extends GetxController {
 
   //mercadoo
   Future<Null> mercadoPagoMakePayment({required BuildContext context, required String amount}) async {
-    final headers = {'Authorization': 'Bearer ${mercadoPagoModel.value.accessToken}', 'Content-Type': 'application/json'};
+    final headers = {
+      'Authorization': 'Bearer ${mercadoPagoModel.value.accessToken}',
+      'Content-Type': 'application/json',
+    };
 
     final body = jsonEncode({
       "items": [
@@ -340,12 +361,20 @@ class ParcelOrderConfirmationController extends GetxController {
         },
       ],
       "payer": {"email": Constant.userModel?.email},
-      "back_urls": {"failure": "${Constant.globalUrl}payment/failure", "pending": "${Constant.globalUrl}payment/pending", "success": "${Constant.globalUrl}payment/success"},
+      "back_urls": {
+        "failure": "${Constant.globalUrl}payment/failure",
+        "pending": "${Constant.globalUrl}payment/pending",
+        "success": "${Constant.globalUrl}payment/success",
+      },
       "auto_return": "approved",
       // Automatically return after payment is approved
     });
 
-    final response = await http.post(Uri.parse("https://api.mercadopago.com/checkout/preferences"), headers: headers, body: body);
+    final response = await http.post(
+      Uri.parse("https://api.mercadopago.com/checkout/preferences"),
+      headers: headers,
+      body: body,
+    );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
@@ -375,8 +404,8 @@ class ParcelOrderConfirmationController extends GetxController {
               sandboxMode: payPalModel.value.isLive == true ? false : true,
               clientId: payPalModel.value.paypalClient ?? '',
               secretKey: payPalModel.value.paypalSecret ?? '',
-              returnURL: "com.emart.customer://paypalpay",
-              cancelURL: "com.emart.customer://paypalcancel",
+              returnURL: Platform.isAndroid ? "com.emart.customer://paypalpay" : "emart.app.customer://paypalpay",
+              cancelURL: Platform.isAndroid ? "com.emart.customer://paypalcancel" : "emart.app.customer://paypalcancel",
 
               transactions: [
                 {
@@ -495,7 +524,11 @@ class ParcelOrderConfirmationController extends GetxController {
       "currency": "NGN",
       "redirect_url": "${Constant.globalUrl}payment/success",
       "payment_options": "ussd, card, barter, payattitude",
-      "customer": {"email": Constant.userModel?.email.toString(), "phonenumber": Constant.userModel?.phoneNumber, "name": Constant.userModel?.fullName()},
+      "customer": {
+        "email": Constant.userModel?.email.toString(),
+        "phonenumber": Constant.userModel?.phoneNumber,
+        "name": Constant.userModel?.fullName(),
+      },
       "customizations": {"title": "Payment for Services", "description": "Payment for XYZ services"},
     });
 
@@ -523,7 +556,10 @@ class ParcelOrderConfirmationController extends GetxController {
   Future<bool> verifyFlutterWavePayment(String txRef) async {
     try {
       final url = Uri.parse("https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=$txRef");
-      final headers = {'Authorization': 'Bearer ${flutterWaveModel.value.secretKey}', 'Content-Type': 'application/json'};
+      final headers = {
+        'Authorization': 'Bearer ${flutterWaveModel.value.secretKey}',
+        'Content-Type': 'application/json',
+      };
 
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
@@ -554,7 +590,11 @@ class ParcelOrderConfirmationController extends GetxController {
 
   // payFast
   void payFastPayment({required BuildContext context, required String amount}) {
-    PayStackURLGen.getPayHTML(payFastSettingData: payFastModel.value, amount: amount.toString(), userModel: Constant.userModel!).then((String? value) async {
+    PayStackURLGen.getPayHTML(
+      payFastSettingData: payFastModel.value,
+      amount: amount.toString(),
+      userModel: Constant.userModel!,
+    ).then((String? value) async {
       bool isDone = await Get.to(PayFastScreen(htmlData: value!, payFastSettingData: payFastModel.value));
       if (isDone) {
         Get.back();
@@ -576,7 +616,11 @@ class ParcelOrderConfirmationController extends GetxController {
     final response = await http.post(
       Uri.parse(getChecksum),
       headers: {},
-      body: {"mid": paytmModel.value.paytmMID.toString(), "order_id": orderId, "key_secret": paytmModel.value.pAYTMMERCHANTKEY.toString()},
+      body: {
+        "mid": paytmModel.value.paytmMID.toString(),
+        "order_id": orderId,
+        "key_secret": paytmModel.value.pAYTMMERCHANTKEY.toString(),
+      },
     );
 
     final data = jsonDecode(response.body);
@@ -590,12 +634,26 @@ class ParcelOrderConfirmationController extends GetxController {
         }
 
         GetPaymentTxtTokenModel result = value;
-        startTransaction(context, txnTokenBy: result.body.txnToken ?? '', orderId: orderId, amount: amount, callBackURL: callback, isStaging: paytmModel.value.isSandboxEnabled);
+        startTransaction(
+          context,
+          txnTokenBy: result.body.txnToken ?? '',
+          orderId: orderId,
+          amount: amount,
+          callBackURL: callback,
+          isStaging: paytmModel.value.isSandboxEnabled,
+        );
       });
     });
   }
 
-  Future<void> startTransaction(context, {required String txnTokenBy, required orderId, required double amount, required callBackURL, required isStaging}) async {
+  Future<void> startTransaction(
+    context, {
+    required String txnTokenBy,
+    required orderId,
+    required double amount,
+    required callBackURL,
+    required isStaging,
+  }) async {
     // try {
     //   var response = AllInOneSdk.startTransaction(
     //     paytmModel.value.paytmMID.toString(),
@@ -636,7 +694,12 @@ class ParcelOrderConfirmationController extends GetxController {
     final response = await http.post(
       Uri.parse(getChecksum),
       headers: {},
-      body: {"mid": paytmModel.value.paytmMID.toString(), "order_id": orderId, "key_secret": paytmModel.value.pAYTMMERCHANTKEY.toString(), "checksum_value": checkSum},
+      body: {
+        "mid": paytmModel.value.paytmMID.toString(),
+        "order_id": orderId,
+        "key_secret": paytmModel.value.pAYTMMERCHANTKEY.toString(),
+        "checksum_value": checkSum,
+      },
     );
     final data = jsonDecode(response.body);
     return data['status'];
@@ -646,7 +709,9 @@ class ParcelOrderConfirmationController extends GetxController {
     String initiateURL = "${Constant.globalUrl}payments/initiatepaytmpayment";
 
     String callback =
-        (paytmModel.value.isSandboxEnabled ?? false) ? "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId" : "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+        (paytmModel.value.isSandboxEnabled ?? false)
+            ? "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId"
+            : "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
 
     print("INITIATE PAYMENT CALL:");
     print("MID: ${paytmModel.value.paytmMID}");
@@ -776,11 +841,19 @@ class ParcelOrderConfirmationController extends GetxController {
 
   Future<String> createPaymentLink({required var amount}) async {
     var ordersId = const Uuid().v1();
-    final url = Uri.parse(midTransModel.value.isSandbox! ? 'https://api.sandbox.midtrans.com/v1/payment-links' : 'https://api.midtrans.com/v1/payment-links');
+    final url = Uri.parse(
+      midTransModel.value.isSandbox!
+          ? 'https://api.sandbox.midtrans.com/v1/payment-links'
+          : 'https://api.midtrans.com/v1/payment-links',
+    );
 
     final response = await http.post(
       url,
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': generateBasicAuthHeader(midTransModel.value.serverKey!)},
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': generateBasicAuthHeader(midTransModel.value.serverKey!),
+      },
       body: jsonEncode({
         'transaction_details': {'order_id': ordersId, 'gross_amount': double.parse(amount.toString()).toInt()},
         'usage_limit': 2,
@@ -824,7 +897,16 @@ class ParcelOrderConfirmationController extends GetxController {
     if (paymentURL.toString().isNotEmpty) {
       debugPrint('✅ Payment URL fetched successfully: $paymentURL');
 
-      Get.to(() => OrangeMoneyScreen(initialURl: paymentURL, accessToken: accessToken, amount: amount, orangePay: orangeMoneyModel.value, orderId: orderId, payToken: payToken))?.then((value) async {
+      Get.to(
+        () => OrangeMoneyScreen(
+          initialURl: paymentURL,
+          accessToken: accessToken,
+          amount: amount,
+          orangePay: orangeMoneyModel.value,
+          orderId: orderId,
+          payToken: payToken,
+        ),
+      )?.then((value) async {
         if (value == true) {
           ShowToastDialog.showToast("Payment Successful!!".tr);
           debugPrint('🎉 Payment Successful for Order ID: $orderId');
@@ -844,7 +926,12 @@ class ParcelOrderConfirmationController extends GetxController {
     }
   }
 
-  Future fetchToken({required String orderId, required String currency, required BuildContext context, required String amount}) async {
+  Future fetchToken({
+    required String orderId,
+    required String currency,
+    required BuildContext context,
+    required String amount,
+  }) async {
     const String apiUrl = 'https://api.orange.com/oauth/v3/token';
     final Map<String, String> requestBody = {'grant_type': 'client_credentials'};
 
@@ -853,7 +940,11 @@ class ParcelOrderConfirmationController extends GetxController {
 
     final response = await http.post(
       Uri.parse(apiUrl),
-      headers: {'Authorization': "Basic ${orangeMoneyModel.value.auth!}", 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'},
+      headers: {
+        'Authorization': "Basic ${orangeMoneyModel.value.auth!}",
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
       body: requestBody,
     );
 
@@ -873,11 +964,19 @@ class ParcelOrderConfirmationController extends GetxController {
     }
   }
 
-  Future webpayment({required String orderIdData, required BuildContext context, required String currency, required String amountData}) async {
+  Future webpayment({
+    required String orderIdData,
+    required BuildContext context,
+    required String currency,
+    required String amountData,
+  }) async {
     orderId = orderIdData;
     amount = amountData;
 
-    String apiUrl = orangeMoneyModel.value.isSandbox == true ? 'https://api.orange.com/orange-money-webpay/dev/v1/webpayment' : 'https://api.orange.com/orange-money-webpay/cm/v1/webpayment';
+    String apiUrl =
+        orangeMoneyModel.value.isSandbox == true
+            ? 'https://api.orange.com/orange-money-webpay/dev/v1/webpayment'
+            : 'https://api.orange.com/orange-money-webpay/cm/v1/webpayment';
 
     // ✅ Ensure amount formatted correctly
     String formattedAmount = double.parse(amountData).toStringAsFixed(2);
@@ -900,7 +999,11 @@ class ParcelOrderConfirmationController extends GetxController {
 
     final response = await http.post(
       Uri.parse(apiUrl),
-      headers: {'Authorization': 'Bearer $accessToken', 'Content-Type': 'application/json', 'Accept': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: json.encode(requestBody),
     );
 
@@ -938,7 +1041,13 @@ class ParcelOrderConfirmationController extends GetxController {
     await createXenditInvoice(amount: amount).then((model) {
       ShowToastDialog.closeLoader();
       if (model.id != null) {
-        Get.to(() => XenditScreen(initialURl: model.invoiceUrl ?? '', transId: model.id ?? '', apiKey: xenditModel.value.apiKey!.toString()))!.then((value) {
+        Get.to(
+          () => XenditScreen(
+            initialURl: model.invoiceUrl ?? '',
+            transId: model.id ?? '',
+            apiKey: xenditModel.value.apiKey!.toString(),
+          ),
+        )!.then((value) {
           if (value == true) {
             ShowToastDialog.showToast("Payment Successful!!".tr);
             placeOrder();

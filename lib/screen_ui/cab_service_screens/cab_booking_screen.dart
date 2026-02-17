@@ -56,11 +56,16 @@ class CabBookingScreen extends StatelessWidget {
                             options: flutterMap.MapOptions(
                               initialCenter:
                                   Constant.currentLocation != null
-                                      ? latlong.LatLng(Constant.currentLocation!.latitude, Constant.currentLocation!.longitude)
+                                      ? latlong.LatLng(
+                                        Constant.currentLocation!.latitude,
+                                        Constant.currentLocation!.longitude,
+                                      )
                                       : controller.currentOrder.value.id != null
                                       ? latlong.LatLng(
                                         double.parse(controller.currentOrder.value.sourceLocation!.latitude.toString()),
-                                        double.parse(controller.currentOrder.value.sourceLocation!.longitude.toString()),
+                                        double.parse(
+                                          controller.currentOrder.value.sourceLocation!.longitude.toString(),
+                                        ),
                                       )
                                       : latlong.LatLng(41.4219057, -102.0840772),
                               initialZoom: 10,
@@ -68,10 +73,19 @@ class CabBookingScreen extends StatelessWidget {
                             children: [
                               flutterMap.TileLayer(
                                 urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                userAgentPackageName: Platform.isAndroid ? "com.emart.customer" : "com.emart.customer.ios",
+                                userAgentPackageName: Platform.isAndroid ? "com.emart.customer" : "emart.app.customer",
                               ),
                               flutterMap.MarkerLayer(markers: controller.osmMarker),
-                              if (controller.routePoints.isNotEmpty) flutterMap.PolylineLayer(polylines: [flutterMap.Polyline(points: controller.routePoints, strokeWidth: 5.0, color: Colors.blue)]),
+                              if (controller.routePoints.isNotEmpty)
+                                flutterMap.PolylineLayer(
+                                  polylines: [
+                                    flutterMap.Polyline(
+                                      points: controller.routePoints,
+                                      strokeWidth: 5.0,
+                                      color: Colors.blue,
+                                    ),
+                                  ],
+                                ),
                             ],
                           )
                           : GoogleMap(
@@ -79,7 +93,10 @@ class CabBookingScreen extends StatelessWidget {
                               controller.mapController = googleMapController;
 
                               if (Constant.currentLocation != null) {
-                                controller.setDepartureMarker(Constant.currentLocation!.latitude, Constant.currentLocation!.longitude);
+                                controller.setDepartureMarker(
+                                  Constant.currentLocation!.latitude,
+                                  Constant.currentLocation!.longitude,
+                                );
                                 controller.searchPlaceNameGoogle();
                               }
                             },
@@ -103,17 +120,27 @@ class CabBookingScreen extends StatelessWidget {
                               controller.bottomSheetType.value = "vehicleSelection";
                             } else if (controller.bottomSheetType.value == "conformRide") {
                               controller.bottomSheetType.value = "payment";
-                            } else if (controller.bottomSheetType.value == "waitingDriver" || controller.bottomSheetType.value == "driverDetails") {
+                            } else if (controller.bottomSheetType.value == "waitingDriver" ||
+                                controller.bottomSheetType.value == "driverDetails") {
                               Get.back(result: true);
                             } else {
                               Get.back();
                             }
                           },
                           child: Container(
-                            decoration: BoxDecoration(color: isDark ? AppThemeData.greyDark50 : AppThemeData.grey50, borderRadius: BorderRadius.circular(30)),
+                            decoration: BoxDecoration(
+                              color: isDark ? AppThemeData.greyDark50 : AppThemeData.grey50,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
-                              child: Center(child: Icon(Icons.arrow_back_ios_new, color: isDark ? AppThemeData.grey50 : AppThemeData.greyDark50, size: 20)),
+                              child: Center(
+                                child: Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.greyDark50,
+                                  size: 20,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -151,16 +178,26 @@ class CabBookingScreen extends StatelessWidget {
         builder: (context, scrollController) {
           return Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(35))),
+            decoration: BoxDecoration(
+              color: isDark ? AppThemeData.grey700 : Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400), height: 4, width: 33),
+                Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400),
+                  height: 4,
+                  width: 33,
+                ),
                 SizedBox(height: 10),
                 Stack(
                   children: [
                     Container(
-                      decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppThemeData.grey700 : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -172,7 +209,11 @@ class CabBookingScreen extends StatelessWidget {
                                 if (result != null) {
                                   controller.sourceTextEditController.value.text = '';
                                   final firstPlace = result;
-                                  if (Constant.checkZoneCheck(firstPlace.coordinates.latitude, firstPlace.coordinates.longitude) == true) {
+                                  if (Constant.checkZoneCheck(
+                                        firstPlace.coordinates.latitude,
+                                        firstPlace.coordinates.longitude,
+                                      ) ==
+                                      true) {
                                     final lat = firstPlace.coordinates.latitude;
                                     final lng = firstPlace.coordinates.longitude;
                                     final address = firstPlace.address;
@@ -187,9 +228,18 @@ class CabBookingScreen extends StatelessWidget {
                                   if (value != null) {
                                     SelectedLocationModel selectedLocationModel = value;
 
-                                    if (Constant.checkZoneCheck(selectedLocationModel.latLng!.latitude, selectedLocationModel.latLng!.longitude) == true) {
-                                      controller.sourceTextEditController.value.text = Utils.formatAddress(selectedLocation: selectedLocationModel);
-                                      controller.setDepartureMarker(selectedLocationModel.latLng!.latitude, selectedLocationModel.latLng!.longitude);
+                                    if (Constant.checkZoneCheck(
+                                          selectedLocationModel.latLng!.latitude,
+                                          selectedLocationModel.latLng!.longitude,
+                                        ) ==
+                                        true) {
+                                      controller.sourceTextEditController.value.text = Utils.formatAddress(
+                                        selectedLocation: selectedLocationModel,
+                                      );
+                                      controller.setDepartureMarker(
+                                        selectedLocationModel.latLng!.latitude,
+                                        selectedLocationModel.latLng!.longitude,
+                                      );
                                     } else {
                                       ShowToastDialog.showToast("Service is unavailable at the selected address.".tr);
                                     }
@@ -201,7 +251,10 @@ class CabBookingScreen extends StatelessWidget {
                               controller: controller.sourceTextEditController.value,
                               hintText: "Pickup Location".tr,
                               enable: false,
-                              prefix: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Image.asset("assets/icons/pickup.png", height: 22, width: 22)),
+                              prefix: Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Image.asset("assets/icons/pickup.png", height: 22, width: 22),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -224,8 +277,13 @@ class CabBookingScreen extends StatelessWidget {
                                   if (value != null) {
                                     SelectedLocationModel selectedLocationModel = value;
 
-                                    controller.destinationTextEditController.value.text = Utils.formatAddress(selectedLocation: selectedLocationModel);
-                                    controller.setDestinationMarker(selectedLocationModel.latLng!.latitude, selectedLocationModel.latLng!.longitude);
+                                    controller.destinationTextEditController.value.text = Utils.formatAddress(
+                                      selectedLocation: selectedLocationModel,
+                                    );
+                                    controller.setDestinationMarker(
+                                      selectedLocationModel.latLng!.latitude,
+                                      selectedLocationModel.latLng!.longitude,
+                                    );
                                   }
                                 });
                               }
@@ -236,7 +294,10 @@ class CabBookingScreen extends StatelessWidget {
                               // borderColor: AppThemeData.grey50,
                               hintText: "Destination Location".tr,
                               enable: false,
-                              prefix: const Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Icon(Icons.radio_button_checked, color: Colors.red)),
+                              prefix: const Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Icon(Icons.radio_button_checked, color: Colors.red),
+                              ),
                             ),
                           ),
                         ],
@@ -293,20 +354,30 @@ class CabBookingScreen extends StatelessWidget {
         expand: false,
         builder: (context, scrollController) {
           return Container(
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+            decoration: BoxDecoration(
+              color: isDark ? AppThemeData.grey700 : Colors.white,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400), height: 4, width: 33),
+                  Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400),
+                    height: 4,
+                    width: 33,
+                  ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Text(
                         "Select Your Vehicle Type".tr,
-                        style: AppThemeData.boldTextStyle(fontSize: 18, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                        style: AppThemeData.boldTextStyle(
+                          fontSize: 18,
+                          color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                        ),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -359,10 +430,23 @@ class CabBookingScreen extends StatelessWidget {
                                           height: 60,
                                           width: 60,
                                           imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), image: DecorationImage(image: imageProvider, fit: BoxFit.cover))),
-                                          placeholder: (context, url) => Center(child: CircularProgressIndicator.adaptive(valueColor: AlwaysStoppedAnimation(AppThemeData.primary300))),
-                                          errorWidget: (context, url, error) => ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network(Constant.placeHolderImage, fit: BoxFit.cover)),
+                                              (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                          placeholder:
+                                              (context, url) => Center(
+                                                child: CircularProgressIndicator.adaptive(
+                                                  valueColor: AlwaysStoppedAnimation(AppThemeData.primary300),
+                                                ),
+                                              ),
+                                          errorWidget:
+                                              (context, url, error) => ClipRRect(
+                                                borderRadius: BorderRadius.circular(20),
+                                                child: Image.network(Constant.placeHolderImage, fit: BoxFit.cover),
+                                              ),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -374,11 +458,18 @@ class CabBookingScreen extends StatelessWidget {
                                             children: [
                                               Text(
                                                 "${vehicleType.name} | ${controller.distance.toStringAsFixed(2)}${'km'.tr}",
-                                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 1,
+                                                ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(top: 2.0),
-                                                child: Text(controller.duration.value, style: const TextStyle(fontWeight: FontWeight.w400, letterSpacing: 1)),
+                                                child: Text(
+                                                  controller.duration.value,
+                                                  style: const TextStyle(fontWeight: FontWeight.w400, letterSpacing: 1),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -386,7 +477,11 @@ class CabBookingScreen extends StatelessWidget {
                                       ),
                                       Text(
                                         Constant.amountShow(amount: controller.getAmount(vehicleType).toString()),
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -404,7 +499,9 @@ class CabBookingScreen extends StatelessWidget {
                         'amount':
                             controller.selectedVehicleType.value.id == null
                                 ? Constant.amountShow(amount: "0.0")
-                                : Constant.amountShow(amount: controller.getAmount(controller.selectedVehicleType.value).toString()),
+                                : Constant.amountShow(
+                                  amount: controller.getAmount(controller.selectedVehicleType.value).toString(),
+                                ),
                       }),
                       onPress: () async {
                         if (controller.selectedVehicleType.value.id != null) {
@@ -437,14 +534,23 @@ class CabBookingScreen extends StatelessWidget {
         builder: (context, scrollController) {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+            decoration: BoxDecoration(
+              color: isDark ? AppThemeData.grey700 : Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Select Payment Method".tr, style: AppThemeData.mediumTextStyle(fontSize: 18, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900)),
+                    Text(
+                      "Select Payment Method".tr,
+                      style: AppThemeData.mediumTextStyle(
+                        fontSize: 18,
+                        color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         Get.back();
@@ -459,9 +565,17 @@ class CabBookingScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     controller: scrollController,
                     children: [
-                      Text("Preferred Payment".tr, textAlign: TextAlign.start, style: AppThemeData.boldTextStyle(fontSize: 15, color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500)),
+                      Text(
+                        "Preferred Payment".tr,
+                        textAlign: TextAlign.start,
+                        style: AppThemeData.boldTextStyle(
+                          fontSize: 15,
+                          color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500,
+                        ),
+                      ),
                       const SizedBox(height: 10),
-                      if (controller.walletSettingModel.value.isEnabled == true || controller.cashOnDeliverySettingModel.value.isEnabled == true)
+                      if (controller.walletSettingModel.value.isEnabled == true ||
+                          controller.cashOnDeliverySettingModel.value.isEnabled == true)
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
@@ -474,17 +588,28 @@ class CabBookingScreen extends StatelessWidget {
                               children: [
                                 Visibility(
                                   visible: controller.walletSettingModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.wallet, isDark, "assets/images/ic_wallet.png"),
+                                  child: cardDecoration(
+                                    controller,
+                                    PaymentGateway.wallet,
+                                    isDark,
+                                    "assets/images/ic_wallet.png",
+                                  ),
                                 ),
                                 Visibility(
                                   visible: controller.cashOnDeliverySettingModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.cod, isDark, "assets/images/ic_cash.png"),
+                                  child: cardDecoration(
+                                    controller,
+                                    PaymentGateway.cod,
+                                    isDark,
+                                    "assets/images/ic_cash.png",
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      if (controller.walletSettingModel.value.isEnabled == true || controller.cashOnDeliverySettingModel.value.isEnabled == true)
+                      if (controller.walletSettingModel.value.isEnabled == true ||
+                          controller.cashOnDeliverySettingModel.value.isEnabled == true)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -492,7 +617,10 @@ class CabBookingScreen extends StatelessWidget {
                             Text(
                               "Other Payment Options".tr,
                               textAlign: TextAlign.start,
-                              style: AppThemeData.boldTextStyle(fontSize: 15, color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500),
+                              style: AppThemeData.boldTextStyle(
+                                fontSize: 15,
+                                color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500,
+                              ),
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -507,25 +635,96 @@ class CabBookingScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Visibility(visible: controller.stripeModel.value.isEnabled == true, child: cardDecoration(controller, PaymentGateway.stripe, isDark, "assets/images/stripe.png")),
-                              Visibility(visible: controller.payPalModel.value.isEnabled == true, child: cardDecoration(controller, PaymentGateway.paypal, isDark, "assets/images/paypal.png")),
-                              Visibility(visible: controller.payStackModel.value.isEnable == true, child: cardDecoration(controller, PaymentGateway.payStack, isDark, "assets/images/paystack.png")),
+                              Visibility(
+                                visible: controller.stripeModel.value.isEnabled == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.stripe,
+                                  isDark,
+                                  "assets/images/stripe.png",
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.payPalModel.value.isEnabled == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.paypal,
+                                  isDark,
+                                  "assets/images/paypal.png",
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.payStackModel.value.isEnable == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.payStack,
+                                  isDark,
+                                  "assets/images/paystack.png",
+                                ),
+                              ),
                               Visibility(
                                 visible: controller.mercadoPagoModel.value.isEnabled == true,
-                                child: cardDecoration(controller, PaymentGateway.mercadoPago, isDark, "assets/images/mercado-pago.png"),
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.mercadoPago,
+                                  isDark,
+                                  "assets/images/mercado-pago.png",
+                                ),
                               ),
                               Visibility(
                                 visible: controller.flutterWaveModel.value.isEnable == true,
-                                child: cardDecoration(controller, PaymentGateway.flutterWave, isDark, "assets/images/flutterwave_logo.png"),
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.flutterWave,
+                                  isDark,
+                                  "assets/images/flutterwave_logo.png",
+                                ),
                               ),
-                              Visibility(visible: controller.payFastModel.value.isEnable == true, child: cardDecoration(controller, PaymentGateway.payFast, isDark, "assets/images/payfast.png")),
-                              Visibility(visible: controller.razorPayModel.value.isEnabled == true, child: cardDecoration(controller, PaymentGateway.razorpay, isDark, "assets/images/razorpay.png")),
-                              Visibility(visible: controller.midTransModel.value.enable == true, child: cardDecoration(controller, PaymentGateway.midTrans, isDark, "assets/images/midtrans.png")),
+                              Visibility(
+                                visible: controller.payFastModel.value.isEnable == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.payFast,
+                                  isDark,
+                                  "assets/images/payfast.png",
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.razorPayModel.value.isEnabled == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.razorpay,
+                                  isDark,
+                                  "assets/images/razorpay.png",
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.midTransModel.value.enable == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.midTrans,
+                                  isDark,
+                                  "assets/images/midtrans.png",
+                                ),
+                              ),
                               Visibility(
                                 visible: controller.orangeMoneyModel.value.enable == true,
-                                child: cardDecoration(controller, PaymentGateway.orangeMoney, isDark, "assets/images/orange_money.png"),
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.orangeMoney,
+                                  isDark,
+                                  "assets/images/orange_money.png",
+                                ),
                               ),
-                              Visibility(visible: controller.xenditModel.value.enable == true, child: cardDecoration(controller, PaymentGateway.xendit, isDark, "assets/images/xendit.png")),
+                              Visibility(
+                                visible: controller.xenditModel.value.enable == true,
+                                child: cardDecoration(
+                                  controller,
+                                  PaymentGateway.xendit,
+                                  isDark,
+                                  "assets/images/xendit.png",
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -546,7 +745,9 @@ class CabBookingScreen extends StatelessWidget {
                     if (controller.selectedPaymentMethod.value == "wallet") {
                       num walletAmount = controller.userModel.value.walletAmount ?? 0;
                       if (walletAmount <= 0) {
-                        ShowToastDialog.showToast("Insufficient wallet balance. Please select another payment method.".tr);
+                        ShowToastDialog.showToast(
+                          "Insufficient wallet balance. Please select another payment method.".tr,
+                        );
                         return;
                       }
                     }
@@ -577,13 +778,20 @@ class CabBookingScreen extends StatelessWidget {
             init: CabBookingController(),
             builder: (controller) {
               return Container(
-                decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                decoration: BoxDecoration(
+                  color: isDark ? AppThemeData.grey700 : Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400), height: 4, width: 33),
+                      Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400),
+                        height: 4,
+                        width: 33,
+                      ),
                       Expanded(
                         child: ListView(
                           controller: scrollController,
@@ -593,7 +801,10 @@ class CabBookingScreen extends StatelessWidget {
                             Stack(
                               children: [
                                 Container(
-                                  decoration: BoxDecoration(color: isDark ? Colors.transparent : Colors.white, borderRadius: BorderRadius.circular(12)),
+                                  decoration: BoxDecoration(
+                                    color: isDark ? Colors.transparent : Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -616,8 +827,13 @@ class CabBookingScreen extends StatelessWidget {
                                               if (value != null) {
                                                 SelectedLocationModel selectedLocationModel = value;
 
-                                                controller.sourceTextEditController.value.text = Utils.formatAddress(selectedLocation: selectedLocationModel);
-                                                controller.setDepartureMarker(selectedLocationModel.latLng!.latitude, selectedLocationModel.latLng!.longitude);
+                                                controller.sourceTextEditController.value.text = Utils.formatAddress(
+                                                  selectedLocation: selectedLocationModel,
+                                                );
+                                                controller.setDepartureMarker(
+                                                  selectedLocationModel.latLng!.latitude,
+                                                  selectedLocationModel.latLng!.longitude,
+                                                );
                                               }
                                             });
                                           }
@@ -626,7 +842,10 @@ class CabBookingScreen extends StatelessWidget {
                                           controller: controller.sourceTextEditController.value,
                                           hintText: "Pickup Location".tr,
                                           enable: false,
-                                          prefix: const Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Icon(Icons.stop_circle_outlined, color: Colors.green)),
+                                          prefix: const Padding(
+                                            padding: EdgeInsets.only(left: 10, right: 10),
+                                            child: Icon(Icons.stop_circle_outlined, color: Colors.green),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(height: 10),
@@ -649,8 +868,12 @@ class CabBookingScreen extends StatelessWidget {
                                               if (value != null) {
                                                 SelectedLocationModel selectedLocationModel = value;
 
-                                                controller.destinationTextEditController.value.text = Utils.formatAddress(selectedLocation: selectedLocationModel);
-                                                controller.setDestinationMarker(selectedLocationModel.latLng!.latitude, selectedLocationModel.latLng!.longitude);
+                                                controller.destinationTextEditController.value.text =
+                                                    Utils.formatAddress(selectedLocation: selectedLocationModel);
+                                                controller.setDestinationMarker(
+                                                  selectedLocationModel.latLng!.latitude,
+                                                  selectedLocationModel.latLng!.longitude,
+                                                );
                                               }
                                             });
                                           }
@@ -661,7 +884,10 @@ class CabBookingScreen extends StatelessWidget {
                                           // borderColor: AppThemeData.grey50,
                                           hintText: "Destination Location".tr,
                                           enable: false,
-                                          prefix: const Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Icon(Icons.radio_button_checked, color: Colors.red)),
+                                          prefix: const Padding(
+                                            padding: EdgeInsets.only(left: 10, right: 10),
+                                            child: Icon(Icons.radio_button_checked, color: Colors.red),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -689,13 +915,24 @@ class CabBookingScreen extends StatelessWidget {
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                Expanded(child: Text("Promo code".tr, style: AppThemeData.boldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900))),
+                                Expanded(
+                                  child: Text(
+                                    "Promo code".tr,
+                                    style: AppThemeData.boldTextStyle(
+                                      fontSize: 16,
+                                      color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                    ),
+                                  ),
+                                ),
                                 InkWell(
                                   onTap: () {
                                     Get.to(CabCouponCodeScreen())!.then((value) {
                                       if (value != null) {
                                         controller.couponCodeTextEditController.value.text = value.code ?? '';
-                                        double couponAmount = Constant.calculateDiscount(amount: controller.subTotal.value.toString(), offerModel: value);
+                                        double couponAmount = Constant.calculateDiscount(
+                                          amount: controller.subTotal.value.toString(),
+                                          offerModel: value,
+                                        );
                                         if (couponAmount < controller.subTotal.value) {
                                           controller.selectedCouponModel.value = value;
                                           controller.calculateTotalAmount();
@@ -707,7 +944,11 @@ class CabBookingScreen extends StatelessWidget {
                                   },
                                   child: Text(
                                     "View All".tr,
-                                    style: AppThemeData.boldTextStyle(decoration: TextDecoration.underline, fontSize: 14, color: isDark ? AppThemeData.primary300 : AppThemeData.primary300),
+                                    style: AppThemeData.boldTextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 14,
+                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -720,7 +961,12 @@ class CabBookingScreen extends StatelessWidget {
                                 height: Responsive.height(6, context),
                                 color: AppThemeData.carRent50,
                                 child: DottedBorder(
-                                  options: RectDottedBorderOptions(dashPattern: [10, 5], strokeWidth: 1, padding: EdgeInsets.all(0), color: AppThemeData.carRent400),
+                                  options: RectDottedBorderOptions(
+                                    dashPattern: [10, 5],
+                                    strokeWidth: 1,
+                                    padding: EdgeInsets.all(0),
+                                    color: AppThemeData.carRent400,
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                                     child: Row(
@@ -733,12 +979,18 @@ class CabBookingScreen extends StatelessWidget {
                                             padding: const EdgeInsets.symmetric(horizontal: 10),
                                             child: TextFormField(
                                               controller: controller.couponCodeTextEditController.value,
-                                              style: AppThemeData.semiBoldTextStyle(color: AppThemeData.parcelService500, fontSize: 16),
+                                              style: AppThemeData.semiBoldTextStyle(
+                                                color: AppThemeData.parcelService500,
+                                                fontSize: 16,
+                                              ),
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
                                                 hintText: 'Write coupon Code'.tr,
                                                 contentPadding: EdgeInsets.only(bottom: 10),
-                                                hintStyle: AppThemeData.semiBoldTextStyle(color: AppThemeData.parcelService500, fontSize: 16),
+                                                hintStyle: AppThemeData.semiBoldTextStyle(
+                                                  color: AppThemeData.parcelService500,
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -756,14 +1008,24 @@ class CabBookingScreen extends StatelessWidget {
 
                                             List matchedCoupons =
                                                 controller.cabCouponList
-                                                    .where((element) => element.code!.toLowerCase().trim() == controller.couponCodeTextEditController.value.text.toLowerCase().trim())
+                                                    .where(
+                                                      (element) =>
+                                                          element.code!.toLowerCase().trim() ==
+                                                          controller.couponCodeTextEditController.value.text
+                                                              .toLowerCase()
+                                                              .trim(),
+                                                    )
                                                     .toList();
 
                                             if (matchedCoupons.isNotEmpty) {
                                               CouponModel couponModel = matchedCoupons.first;
 
-                                              if (couponModel.expiresAt != null && couponModel.expiresAt!.toDate().isAfter(DateTime.now())) {
-                                                double couponAmount = Constant.calculateDiscount(amount: controller.subTotal.value.toString(), offerModel: couponModel);
+                                              if (couponModel.expiresAt != null &&
+                                                  couponModel.expiresAt!.toDate().isAfter(DateTime.now())) {
+                                                double couponAmount = Constant.calculateDiscount(
+                                                  amount: controller.subTotal.value.toString(),
+                                                  offerModel: couponModel,
+                                                );
 
                                                 if (couponAmount < controller.subTotal.value) {
                                                   controller.selectedCouponModel.value = couponModel;
@@ -772,7 +1034,9 @@ class CabBookingScreen extends StatelessWidget {
                                                   ShowToastDialog.showToast("Coupon applied successfully".tr);
                                                   controller.update();
                                                 } else {
-                                                  ShowToastDialog.showToast("This offer not eligible for this booking".tr);
+                                                  ShowToastDialog.showToast(
+                                                    "This offer not eligible for this booking".tr,
+                                                  );
                                                 }
                                               } else {
                                                 ShowToastDialog.showToast("This coupon code has been expired".tr);
@@ -802,7 +1066,13 @@ class CabBookingScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Order Summary".tr, style: AppThemeData.boldTextStyle(fontSize: 14, color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500)),
+                                  Text(
+                                    "Order Summary".tr,
+                                    style: AppThemeData.boldTextStyle(
+                                      fontSize: 14,
+                                      color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500,
+                                    ),
+                                  ),
                                   const SizedBox(height: 8),
 
                                   Padding(
@@ -810,10 +1080,19 @@ class CabBookingScreen extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("Subtotal".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800)),
+                                        Text(
+                                          "Subtotal".tr,
+                                          style: AppThemeData.mediumTextStyle(
+                                            fontSize: 16,
+                                            color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800,
+                                          ),
+                                        ),
                                         Text(
                                           Constant.amountShow(amount: controller.subTotal.value.toString()),
-                                          style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                          style: AppThemeData.semiBoldTextStyle(
+                                            fontSize: 16,
+                                            color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -826,15 +1105,32 @@ class CabBookingScreen extends StatelessWidget {
                                       children: [
                                         Row(
                                           children: [
-                                            Text("Discount".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900)),
+                                            Text(
+                                              "Discount".tr,
+                                              style: AppThemeData.mediumTextStyle(
+                                                fontSize: 16,
+                                                color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                              ),
+                                            ),
                                             SizedBox(width: 5),
                                             Text(
-                                              controller.selectedCouponModel.value.id == null ? "" : "(${controller.selectedCouponModel.value.code})",
-                                              style: AppThemeData.mediumTextStyle(fontSize: 16, color: AppThemeData.primary300),
+                                              controller.selectedCouponModel.value.id == null
+                                                  ? ""
+                                                  : "(${controller.selectedCouponModel.value.code})",
+                                              style: AppThemeData.mediumTextStyle(
+                                                fontSize: 16,
+                                                color: AppThemeData.primary300,
+                                              ),
                                             ),
                                           ],
                                         ),
-                                        Text(Constant.amountShow(amount: controller.discount.value.toString()), style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: AppThemeData.danger300)),
+                                        Text(
+                                          Constant.amountShow(amount: controller.discount.value.toString()),
+                                          style: AppThemeData.semiBoldTextStyle(
+                                            fontSize: 16,
+                                            color: AppThemeData.danger300,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -853,17 +1149,30 @@ class CabBookingScreen extends StatelessWidget {
                                           children: [
                                             Expanded(
                                               child: Text(
-                                                '${taxModel.title} (${taxModel.tax} ${taxModel.type == "Fixed" ? Constant.currencyData!.code : "%"})'.tr,
+                                                '${taxModel.title} (${taxModel.tax} ${taxModel.type == "Fixed" ? Constant.currencyData!.code : "%"})'
+                                                    .tr,
                                                 textAlign: TextAlign.start,
-                                                style: AppThemeData.mediumTextStyle(fontSize: 14, color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800),
+                                                style: AppThemeData.mediumTextStyle(
+                                                  fontSize: 14,
+                                                  color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800,
+                                                ),
                                               ),
                                             ),
                                             Text(
                                               Constant.amountShow(
-                                                amount: Constant.calculateTax(amount: (controller.subTotal.value - controller.discount.value).toString(), taxModel: taxModel).toString(),
+                                                amount:
+                                                    Constant.calculateTax(
+                                                      amount:
+                                                          (controller.subTotal.value - controller.discount.value)
+                                                              .toString(),
+                                                      taxModel: taxModel,
+                                                    ).toString(),
                                               ).tr,
                                               textAlign: TextAlign.start,
-                                              style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                              style: AppThemeData.semiBoldTextStyle(
+                                                fontSize: 16,
+                                                color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -877,10 +1186,19 @@ class CabBookingScreen extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("Order Total".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900)),
+                                        Text(
+                                          "Order Total".tr,
+                                          style: AppThemeData.mediumTextStyle(
+                                            fontSize: 16,
+                                            color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                          ),
+                                        ),
                                         Text(
                                           Constant.amountShow(amount: controller.totalAmount.value.toString()),
-                                          style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                          style: AppThemeData.semiBoldTextStyle(
+                                            fontSize: 16,
+                                            color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -901,33 +1219,96 @@ class CabBookingScreen extends StatelessWidget {
                                   controller.selectedPaymentMethod.value == ''
                                       ? cardDecorationScreen(controller, PaymentGateway.wallet, isDark, "")
                                       : controller.selectedPaymentMethod.value == PaymentGateway.wallet.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.wallet, isDark, "assets/images/ic_wallet.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.wallet,
+                                        isDark,
+                                        "assets/images/ic_wallet.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.cod.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.cod, isDark, "assets/images/ic_cash.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.cod,
+                                        isDark,
+                                        "assets/images/ic_cash.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.stripe.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.stripe, isDark, "assets/images/stripe.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.stripe,
+                                        isDark,
+                                        "assets/images/stripe.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.paypal.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.paypal, isDark, "assets/images/paypal.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.paypal,
+                                        isDark,
+                                        "assets/images/paypal.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.payStack.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.payStack, isDark, "assets/images/paystack.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.payStack,
+                                        isDark,
+                                        "assets/images/paystack.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.mercadoPago.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.mercadoPago, isDark, "assets/images/mercado-pago.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.mercadoPago,
+                                        isDark,
+                                        "assets/images/mercado-pago.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.flutterWave.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.flutterWave, isDark, "assets/images/flutterwave_logo.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.flutterWave,
+                                        isDark,
+                                        "assets/images/flutterwave_logo.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.payFast.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.payFast, isDark, "assets/images/payfast.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.payFast,
+                                        isDark,
+                                        "assets/images/payfast.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.midTrans.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.midTrans, isDark, "assets/images/midtrans.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.midTrans,
+                                        isDark,
+                                        "assets/images/midtrans.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.orangeMoney.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.orangeMoney, isDark, "assets/images/orange_money.png")
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.orangeMoney,
+                                        isDark,
+                                        "assets/images/orange_money.png",
+                                      )
                                       : controller.selectedPaymentMethod.value == PaymentGateway.xendit.name
-                                      ? cardDecorationScreen(controller, PaymentGateway.xendit, isDark, "assets/images/xendit.png")
-                                      : cardDecorationScreen(controller, PaymentGateway.razorpay, isDark, "assets/images/razorpay.png"),
+                                      ? cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.xendit,
+                                        isDark,
+                                        "assets/images/xendit.png",
+                                      )
+                                      : cardDecorationScreen(
+                                        controller,
+                                        PaymentGateway.razorpay,
+                                        isDark,
+                                        "assets/images/razorpay.png",
+                                      ),
                                   SizedBox(width: 22),
                                   Text(
                                     controller.selectedPaymentMethod.value.tr,
                                     textAlign: TextAlign.start,
-                                    style: AppThemeData.boldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                    style: AppThemeData.boldTextStyle(
+                                      fontSize: 16,
+                                      color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -963,15 +1344,25 @@ class CabBookingScreen extends StatelessWidget {
         expand: false,
         builder: (context, scrollController) {
           return Container(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400), height: 4, width: 33),
+                  Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400),
+                    height: 4,
+                    width: 33,
+                  ),
                   SizedBox(height: 30),
-                  Text("Waiting for driver....".tr, style: AppThemeData.mediumTextStyle(fontSize: 18, color: AppThemeData.grey900)),
+                  Text(
+                    "Waiting for driver....".tr,
+                    style: AppThemeData.mediumTextStyle(fontSize: 18, color: AppThemeData.grey900),
+                  ),
                   Image.asset('assets/loader.gif', width: 250),
                   RoundedButtonFill(
                     title: "Cancel Ride".tr,
@@ -1034,13 +1425,20 @@ class CabBookingScreen extends StatelessWidget {
         expand: false,
         builder: (context, scrollController) {
           return Container(
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey700 : Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+            decoration: BoxDecoration(
+              color: isDark ? AppThemeData.grey700 : Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400), height: 4, width: 33),
+                  Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppThemeData.grey400),
+                    height: 4,
+                    width: 33,
+                  ),
                   Expanded(
                     child: ListView(
                       controller: scrollController,
@@ -1050,7 +1448,10 @@ class CabBookingScreen extends StatelessWidget {
                         Stack(
                           children: [
                             Container(
-                              decoration: BoxDecoration(color: isDark ? Colors.transparent : Colors.white, borderRadius: BorderRadius.circular(12)),
+                              decoration: BoxDecoration(
+                                color: isDark ? Colors.transparent : Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -1083,7 +1484,10 @@ class CabBookingScreen extends StatelessWidget {
                                       hintText: "Pickup Location".tr,
                                       enable: false,
                                       readOnly: true,
-                                      prefix: const Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Icon(Icons.stop_circle_outlined, color: Colors.green)),
+                                      prefix: const Padding(
+                                        padding: EdgeInsets.only(left: 10, right: 10),
+                                        child: Icon(Icons.stop_circle_outlined, color: Colors.green),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -1118,7 +1522,10 @@ class CabBookingScreen extends StatelessWidget {
                                       hintText: "Destination Location".tr,
                                       enable: false,
                                       readOnly: true,
-                                      prefix: const Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Icon(Icons.radio_button_checked, color: Colors.red)),
+                                      prefix: const Padding(
+                                        padding: EdgeInsets.only(left: 10, right: 10),
+                                        child: Icon(Icons.radio_button_checked, color: Colors.red),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1151,10 +1558,19 @@ class CabBookingScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Otp :".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800)),
+                                  Text(
+                                    "Otp :".tr,
+                                    style: AppThemeData.mediumTextStyle(
+                                      fontSize: 16,
+                                      color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800,
+                                    ),
+                                  ),
                                   Text(
                                     controller.currentOrder.value.otpCode ?? '',
-                                    style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                    style: AppThemeData.semiBoldTextStyle(
+                                      fontSize: 16,
+                                      color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1170,7 +1586,12 @@ class CabBookingScreen extends StatelessWidget {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadiusGeometry.circular(10),
-                                  child: NetworkImageWidget(imageUrl: controller.currentOrder.value.driver?.profilePictureURL ?? '', height: 70, width: 70, borderRadius: 35),
+                                  child: NetworkImageWidget(
+                                    imageUrl: controller.currentOrder.value.driver?.profilePictureURL ?? '',
+                                    height: 70,
+                                    width: 70,
+                                    borderRadius: 35,
+                                  ),
                                 ),
                                 SizedBox(width: 10),
                                 Expanded(
@@ -1180,15 +1601,25 @@ class CabBookingScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         controller.currentOrder.value.driver?.fullName() ?? '',
-                                        style: AppThemeData.boldTextStyle(color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900, fontSize: 18),
+                                        style: AppThemeData.boldTextStyle(
+                                          color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                          fontSize: 18,
+                                        ),
                                       ),
                                       Text(
                                         "${controller.currentOrder.value.driver?.vehicleType ?? ''} | ${controller.currentOrder.value.driver?.carMakes.toString()}",
-                                        style: TextStyle(fontFamily: AppThemeData.medium, color: isDark ? AppThemeData.greyDark700 : AppThemeData.grey700, fontSize: 14),
+                                        style: TextStyle(
+                                          fontFamily: AppThemeData.medium,
+                                          color: isDark ? AppThemeData.greyDark700 : AppThemeData.grey700,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                       Text(
                                         controller.currentOrder.value.driver?.carNumber ?? '',
-                                        style: AppThemeData.boldTextStyle(color: isDark ? AppThemeData.greyDark700 : AppThemeData.grey700, fontSize: 16),
+                                        style: AppThemeData.boldTextStyle(
+                                          color: isDark ? AppThemeData.greyDark700 : AppThemeData.grey700,
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1213,18 +1644,26 @@ class CabBookingScreen extends StatelessWidget {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            Constant.makePhoneCall(controller.currentOrder.value.driver!.phoneNumber.toString());
+                                            Constant.makePhoneCall(
+                                              controller.currentOrder.value.driver!.phoneNumber.toString(),
+                                            );
                                           },
                                           child: Container(
                                             width: 38,
                                             height: 38,
                                             decoration: ShapeDecoration(
                                               shape: RoundedRectangleBorder(
-                                                side: BorderSide(width: 1, color: isDark ? AppThemeData.grey200 : AppThemeData.grey200),
+                                                side: BorderSide(
+                                                  width: 1,
+                                                  color: isDark ? AppThemeData.grey200 : AppThemeData.grey200,
+                                                ),
                                                 borderRadius: BorderRadius.circular(120),
                                               ),
                                             ),
-                                            child: Padding(padding: const EdgeInsets.all(8.0), child: SvgPicture.asset("assets/icons/ic_phone_call.svg")),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: SvgPicture.asset("assets/icons/ic_phone_call.svg"),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -1232,8 +1671,12 @@ class CabBookingScreen extends StatelessWidget {
                                           onTap: () async {
                                             ShowToastDialog.showLoader("Please wait...".tr);
 
-                                            UserModel? customer = await FireStoreUtils.getUserProfile(controller.currentOrder.value.authorID ?? '');
-                                            UserModel? driverUser = await FireStoreUtils.getUserProfile(controller.currentOrder.value.driverId ?? '');
+                                            UserModel? customer = await FireStoreUtils.getUserProfile(
+                                              controller.currentOrder.value.authorID ?? '',
+                                            );
+                                            UserModel? driverUser = await FireStoreUtils.getUserProfile(
+                                              controller.currentOrder.value.driverId ?? '',
+                                            );
 
                                             ShowToastDialog.closeLoader();
 
@@ -1257,11 +1700,17 @@ class CabBookingScreen extends StatelessWidget {
                                             height: 42,
                                             decoration: ShapeDecoration(
                                               shape: RoundedRectangleBorder(
-                                                side: BorderSide(width: 1, color: isDark ? AppThemeData.grey200 : AppThemeData.grey200),
+                                                side: BorderSide(
+                                                  width: 1,
+                                                  color: isDark ? AppThemeData.grey200 : AppThemeData.grey200,
+                                                ),
                                                 borderRadius: BorderRadius.circular(120),
                                               ),
                                             ),
-                                            child: Padding(padding: const EdgeInsets.all(8.0), child: SvgPicture.asset("assets/icons/ic_wechat.svg")),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: SvgPicture.asset("assets/icons/ic_wechat.svg"),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -1286,37 +1735,107 @@ class CabBookingScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 controller.selectedPaymentMethod.value == PaymentGateway.wallet.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.wallet, isDark, "assets/images/ic_wallet.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.wallet,
+                                      isDark,
+                                      "assets/images/ic_wallet.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.cod.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.cod, isDark, "assets/images/ic_cash.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.cod,
+                                      isDark,
+                                      "assets/images/ic_cash.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.stripe.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.stripe, isDark, "assets/images/stripe.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.stripe,
+                                      isDark,
+                                      "assets/images/stripe.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.paypal.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.paypal, isDark, "assets/images/paypal.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.paypal,
+                                      isDark,
+                                      "assets/images/paypal.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.payStack.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.payStack, isDark, "assets/images/paystack.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.payStack,
+                                      isDark,
+                                      "assets/images/paystack.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.mercadoPago.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.mercadoPago, isDark, "assets/images/mercado-pago.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.mercadoPago,
+                                      isDark,
+                                      "assets/images/mercado-pago.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.flutterWave.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.flutterWave, isDark, "assets/images/flutterwave_logo.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.flutterWave,
+                                      isDark,
+                                      "assets/images/flutterwave_logo.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.payFast.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.payFast, isDark, "assets/images/payfast.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.payFast,
+                                      isDark,
+                                      "assets/images/payfast.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.midTrans.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.midTrans, isDark, "assets/images/midtrans.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.midTrans,
+                                      isDark,
+                                      "assets/images/midtrans.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.orangeMoney.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.orangeMoney, isDark, "assets/images/orange_money.png")
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.orangeMoney,
+                                      isDark,
+                                      "assets/images/orange_money.png",
+                                    )
                                     : controller.selectedPaymentMethod.value == PaymentGateway.xendit.name
-                                    ? cardDecorationScreen(controller, PaymentGateway.xendit, isDark, "assets/images/xendit.png")
-                                    : cardDecorationScreen(controller, PaymentGateway.razorpay, isDark, "assets/images/razorpay.png"),
+                                    ? cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.xendit,
+                                      isDark,
+                                      "assets/images/xendit.png",
+                                    )
+                                    : cardDecorationScreen(
+                                      controller,
+                                      PaymentGateway.razorpay,
+                                      isDark,
+                                      "assets/images/razorpay.png",
+                                    ),
                                 SizedBox(width: 22),
                                 Expanded(
                                   child: Text(
                                     controller.selectedPaymentMethod.value.tr,
                                     textAlign: TextAlign.start,
-                                    style: AppThemeData.boldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                    style: AppThemeData.boldTextStyle(
+                                      fontSize: 16,
+                                      color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                    ),
                                   ),
                                 ),
-                                Text("Change".tr, textAlign: TextAlign.start, style: AppThemeData.boldTextStyle(fontSize: 16, color: isDark ? AppThemeData.primary300 : AppThemeData.primary300)),
+                                Text(
+                                  "Change".tr,
+                                  textAlign: TextAlign.start,
+                                  style: AppThemeData.boldTextStyle(
+                                    fontSize: 16,
+                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -1332,7 +1851,13 @@ class CabBookingScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Order Summary".tr, style: AppThemeData.boldTextStyle(fontSize: 14, color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500)),
+                              Text(
+                                "Order Summary".tr,
+                                style: AppThemeData.boldTextStyle(
+                                  fontSize: 14,
+                                  color: isDark ? AppThemeData.greyDark500 : AppThemeData.grey500,
+                                ),
+                              ),
                               const SizedBox(height: 8),
 
                               Padding(
@@ -1340,10 +1865,19 @@ class CabBookingScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Subtotal".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800)),
+                                    Text(
+                                      "Subtotal".tr,
+                                      style: AppThemeData.mediumTextStyle(
+                                        fontSize: 16,
+                                        color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800,
+                                      ),
+                                    ),
                                     Text(
                                       Constant.amountShow(amount: controller.subTotal.value.toString()),
-                                      style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                      style: AppThemeData.semiBoldTextStyle(
+                                        fontSize: 16,
+                                        color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1354,8 +1888,20 @@ class CabBookingScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Discount".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900)),
-                                    Text(Constant.amountShow(amount: controller.discount.value.toString()), style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: AppThemeData.danger300)),
+                                    Text(
+                                      "Discount".tr,
+                                      style: AppThemeData.mediumTextStyle(
+                                        fontSize: 16,
+                                        color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                      ),
+                                    ),
+                                    Text(
+                                      Constant.amountShow(amount: controller.discount.value.toString()),
+                                      style: AppThemeData.semiBoldTextStyle(
+                                        fontSize: 16,
+                                        color: AppThemeData.danger300,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -1374,17 +1920,30 @@ class CabBookingScreen extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            '${taxModel.title} (${taxModel.tax} ${taxModel.type == "Fixed" ? Constant.currencyData!.code : "%"})'.tr,
+                                            '${taxModel.title} (${taxModel.tax} ${taxModel.type == "Fixed" ? Constant.currencyData!.code : "%"})'
+                                                .tr,
                                             textAlign: TextAlign.start,
-                                            style: AppThemeData.mediumTextStyle(fontSize: 14, color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800),
+                                            style: AppThemeData.mediumTextStyle(
+                                              fontSize: 14,
+                                              color: isDark ? AppThemeData.greyDark800 : AppThemeData.grey800,
+                                            ),
                                           ),
                                         ),
                                         Text(
                                           Constant.amountShow(
-                                            amount: Constant.calculateTax(amount: (controller.subTotal.value - controller.discount.value).toString(), taxModel: taxModel).toString(),
+                                            amount:
+                                                Constant.calculateTax(
+                                                  amount:
+                                                      (controller.subTotal.value - controller.discount.value)
+                                                          .toString(),
+                                                  taxModel: taxModel,
+                                                ).toString(),
                                           ).tr,
                                           textAlign: TextAlign.start,
-                                          style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                          style: AppThemeData.semiBoldTextStyle(
+                                            fontSize: 16,
+                                            color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1398,10 +1957,19 @@ class CabBookingScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Order Total".tr, style: AppThemeData.mediumTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900)),
+                                    Text(
+                                      "Order Total".tr,
+                                      style: AppThemeData.mediumTextStyle(
+                                        fontSize: 16,
+                                        color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                      ),
+                                    ),
                                     Text(
                                       Constant.amountShow(amount: controller.totalAmount.value.toString()),
-                                      style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900),
+                                      style: AppThemeData.semiBoldTextStyle(
+                                        fontSize: 16,
+                                        color: isDark ? AppThemeData.greyDark900 : AppThemeData.grey900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1431,17 +1999,28 @@ class CabBookingScreen extends StatelessWidget {
 
                               await FireStoreUtils.getSOS(controller.currentOrder.value.id ?? '').then((value) async {
                                 if (value == false) {
-                                  await FireStoreUtils.setSos(controller.currentOrder.value.id ?? '', UserLocation(latitude: location.latitude!, longitude: location.longitude!)).then((_) {
+                                  await FireStoreUtils.setSos(
+                                    controller.currentOrder.value.id ?? '',
+                                    UserLocation(latitude: location.latitude!, longitude: location.longitude!),
+                                  ).then((_) {
                                     ShowToastDialog.closeLoader();
-                                    ScaffoldMessenger.of(
-                                      context,
-                                    ).showSnackBar(SnackBar(content: Text("Your SOS request has been submitted to admin".tr), backgroundColor: Colors.green, duration: Duration(seconds: 3)));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Your SOS request has been submitted to admin".tr),
+                                        backgroundColor: Colors.green,
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
                                   });
                                 } else {
                                   ShowToastDialog.closeLoader();
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).showSnackBar(SnackBar(content: Text("Your SOS request is already submitted".tr), backgroundColor: Colors.red, duration: Duration(seconds: 3)));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Your SOS request is already submitted".tr),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
                                 }
                               });
                             },
@@ -1454,7 +2033,8 @@ class CabBookingScreen extends StatelessWidget {
                     }
                   }),
                   Obx(() {
-                    if (controller.currentOrder.value.status == Constant.orderInTransit && controller.currentOrder.value.paymentStatus == false) {
+                    if (controller.currentOrder.value.status == Constant.orderInTransit &&
+                        controller.currentOrder.value.paymentStatus == false) {
                       return RoundedButtonFill(
                         title: "Pay Now".tr,
                         onPress: () async {
@@ -1465,35 +2045,59 @@ class CabBookingScreen extends StatelessWidget {
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.payStack.name) {
                             controller.payStackPayment(controller.totalAmount.value.toString());
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.mercadoPago.name) {
-                            controller.mercadoPagoMakePayment(context: context, amount: controller.totalAmount.value.toString());
+                            controller.mercadoPagoMakePayment(
+                              context: context,
+                              amount: controller.totalAmount.value.toString(),
+                            );
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.flutterWave.name) {
-                            controller.flutterWaveInitiatePayment(context: context, amount: controller.totalAmount.value.toString());
+                            controller.flutterWaveInitiatePayment(
+                              context: context,
+                              amount: controller.totalAmount.value.toString(),
+                            );
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.payFast.name) {
-                            controller.payFastPayment(context: context, amount: controller.totalAmount.value.toString());
+                            controller.payFastPayment(
+                              context: context,
+                              amount: controller.totalAmount.value.toString(),
+                            );
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.cod.name) {
                             controller.completeOrder();
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.wallet.name) {
-                            if (Constant.userModel!.walletAmount == null || Constant.userModel!.walletAmount! < controller.totalAmount.value) {
+                            if (Constant.userModel!.walletAmount == null ||
+                                Constant.userModel!.walletAmount! < controller.totalAmount.value) {
                               ShowToastDialog.showToast("You do not have sufficient wallet balance".tr);
                             } else {
                               controller.completeOrder();
                             }
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.midTrans.name) {
-                            controller.midtransMakePayment(context: context, amount: controller.totalAmount.value.toString());
+                            controller.midtransMakePayment(
+                              context: context,
+                              amount: controller.totalAmount.value.toString(),
+                            );
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.orangeMoney.name) {
-                            controller.orangeMakePayment(context: context, amount: controller.totalAmount.value.toString());
+                            controller.orangeMakePayment(
+                              context: context,
+                              amount: controller.totalAmount.value.toString(),
+                            );
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.xendit.name) {
                             controller.xenditPayment(context, controller.totalAmount.value.toString());
                           } else if (controller.selectedPaymentMethod.value == PaymentGateway.razorpay.name) {
-                            RazorPayController().createOrderRazorPay(amount: double.parse(controller.totalAmount.value.toString()), razorpayModel: controller.razorPayModel.value).then((value) {
-                              if (value == null) {
-                                Get.back();
-                                ShowToastDialog.showToast("Something went wrong, please contact admin.".tr);
-                              } else {
-                                CreateRazorPayOrderModel result = value;
-                                controller.openCheckout(amount: controller.totalAmount.value.toString(), orderId: result.id);
-                              }
-                            });
+                            RazorPayController()
+                                .createOrderRazorPay(
+                                  amount: double.parse(controller.totalAmount.value.toString()),
+                                  razorpayModel: controller.razorPayModel.value,
+                                )
+                                .then((value) {
+                                  if (value == null) {
+                                    Get.back();
+                                    ShowToastDialog.showToast("Something went wrong, please contact admin.".tr);
+                                  } else {
+                                    CreateRazorPayOrderModel result = value;
+                                    controller.openCheckout(
+                                      amount: controller.totalAmount.value.toString(),
+                                      orderId: result.id,
+                                    );
+                                  }
+                                });
                           } else {
                             ShowToastDialog.showToast("Please select payment method".tr);
                           }
@@ -1520,8 +2124,17 @@ class CabBookingScreen extends StatelessWidget {
       child: Container(
         width: 40,
         height: 40,
-        decoration: ShapeDecoration(shape: RoundedRectangleBorder(side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)), borderRadius: BorderRadius.circular(8))),
-        child: Padding(padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0), child: image == '' ? Container(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100) : Image.asset(image)),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0),
+          child:
+              image == '' ? Container(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100) : Image.asset(image),
+        ),
       ),
     );
   }
@@ -1541,8 +2154,16 @@ class CabBookingScreen extends StatelessWidget {
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: ShapeDecoration(shape: RoundedRectangleBorder(side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)), borderRadius: BorderRadius.circular(8))),
-                    child: Padding(padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0), child: Image.asset(image)),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0),
+                      child: Image.asset(image),
+                    ),
                   ),
                   const SizedBox(width: 10),
                   value.name == "wallet"
@@ -1553,12 +2174,23 @@ class CabBookingScreen extends StatelessWidget {
                             Text(
                               value.name.capitalizeString(),
                               textAlign: TextAlign.start,
-                              style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900),
+                              style: AppThemeData.semiBoldTextStyle(
+                                fontSize: 16,
+                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              ),
                             ),
                             Text(
-                              Constant.amountShow(amount: controller.userModel.value.walletAmount == null ? '0.0' : controller.userModel.value.walletAmount.toString()),
+                              Constant.amountShow(
+                                amount:
+                                    controller.userModel.value.walletAmount == null
+                                        ? '0.0'
+                                        : controller.userModel.value.walletAmount.toString(),
+                              ),
                               textAlign: TextAlign.start,
-                              style: AppThemeData.semiBoldTextStyle(fontSize: 14, color: isDark ? AppThemeData.primary300 : AppThemeData.primary300),
+                              style: AppThemeData.semiBoldTextStyle(
+                                fontSize: 14,
+                                color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                              ),
                             ),
                           ],
                         ),
@@ -1567,7 +2199,10 @@ class CabBookingScreen extends StatelessWidget {
                         child: Text(
                           value.name.capitalizeString(),
                           textAlign: TextAlign.start,
-                          style: AppThemeData.semiBoldTextStyle(fontSize: 16, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900),
+                          style: AppThemeData.semiBoldTextStyle(
+                            fontSize: 16,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                          ),
                         ),
                       ),
                   const Expanded(child: SizedBox()),

@@ -18,7 +18,7 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       throw UnsupportedError(
         'DefaultFirebaseOptions have not been configured for web - '
-            'you can reconfigure this by running the FlutterFire CLI again.',
+        'you can reconfigure this by running the FlutterFire CLI again.',
       );
     }
     switch (defaultTargetPlatform) {
@@ -29,43 +29,41 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
-        );
+        throw UnsupportedError('DefaultFirebaseOptions are not supported for this platform.');
     }
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_ANDROID_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_ANDROID_PROJECT_ID',
-    databaseURL: 'YOUR_ANDROID_DATABASE_URL',
-    storageBucket: 'YOUR_ANDROID_STORAGE_BUCKET',
+    apiKey: 'AIzaSyARiVFpXDiXy_6W7l3UtEkCPNr0_A6_TWk',
+    appId: '1:201686143127:android:4630d364c4cfbaa41c59d2',
+    messagingSenderId: '201686143127',
+    projectId: 'emart-fc547',
+    databaseURL: 'https://emart-fc547-default-rtdb.firebaseio.com',
+    storageBucket: 'emart-fc547.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',
-    messagingSenderId: 'YOUR_IOS_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_IOS_PROJECT_ID',
-    databaseURL: 'YOUR_IOS_DATABASE_URL',
-    storageBucket: 'YOUR_IOS_STORAGE_BUCKET',
-    androidClientId: 'YOUR_ANDROID_CLIENT_ID',
-    iosClientId: 'YOUR_IOS_CLIENT_ID',
-    iosBundleId: 'YOUR_IOS_BUNDLE_ID',
+    apiKey: 'AIzaSyDt4xW8uvrG388ybuHWzC81AgmKKw3MlP0',
+    appId: '1:201686143127:ios:6b895af5309302071c59d2',
+    messagingSenderId: '201686143127',
+    projectId: 'emart-fc547',
+    databaseURL: 'https://emart-fc547-default-rtdb.firebaseio.com',
+    storageBucket: 'emart-fc547.firebasestorage.app',
+    androidClientId: '201686143127-26k2cmhd0kql8h5bufcmck056u2bt5vh.apps.googleusercontent.com',
+    iosClientId: '201686143127-l3dmqc7v1v8l3qcrkf0l2uvron4lm9ai.apps.googleusercontent.com',
+    iosBundleId: 'emart.app.customer',
   );
 }

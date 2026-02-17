@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/controllers/live_tracking_controller.dart';
 import 'package:customer/themes/app_them_data.dart';
@@ -24,16 +25,30 @@ class LiveTrackingScreen extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
-          appBar: AppBar(backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface, title: Text("Live Tracking".tr), centerTitle: false),
+          appBar: AppBar(
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+            title: Text("Live Tracking".tr),
+            centerTitle: false,
+          ),
           body:
               Constant.selectedMapType == 'osm'
                   ? flutterMap.FlutterMap(
                     mapController: controller.osmMapController,
                     options: flutterMap.MapOptions(initialCenter: controller.driverCurrent.value, initialZoom: 14),
                     children: [
-                      flutterMap.TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', userAgentPackageName: 'com.emart.customer'),
-                      if (controller.routePoints.isNotEmpty) flutterMap.PolylineLayer(polylines: [flutterMap.Polyline(points: controller.routePoints, strokeWidth: 5.0, color: Colors.blue)]),
-                      flutterMap.MarkerLayer(markers: controller.orderModel.value.id == null ? [] : controller.osmMarkers),
+                      flutterMap.TileLayer(
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: Platform.isAndroid ? 'com.emart.customer' : 'emart.app.customer',
+                      ),
+                      if (controller.routePoints.isNotEmpty)
+                        flutterMap.PolylineLayer(
+                          polylines: [
+                            flutterMap.Polyline(points: controller.routePoints, strokeWidth: 5.0, color: Colors.blue),
+                          ],
+                        ),
+                      flutterMap.MarkerLayer(
+                        markers: controller.orderModel.value.id == null ? [] : controller.osmMarkers,
+                      ),
                     ],
                   )
                   : gmap.GoogleMap(
@@ -46,7 +61,10 @@ class LiveTrackingScreen extends StatelessWidget {
                     markers: Set<gmap.Marker>.of(controller.markers.values),
                     initialCameraPosition: gmap.CameraPosition(
                       zoom: 14,
-                      target: gmap.LatLng(controller.driverUserModel.value.location?.latitude ?? 0.0, controller.driverUserModel.value.location?.longitude ?? 0.0),
+                      target: gmap.LatLng(
+                        controller.driverUserModel.value.location?.latitude ?? 0.0,
+                        controller.driverUserModel.value.location?.longitude ?? 0.0,
+                      ),
                     ),
                   ),
         );
