@@ -68,7 +68,7 @@ class CabBookingScreen extends StatelessWidget {
                             children: [
                               flutterMap.TileLayer(
                                 urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                userAgentPackageName: Platform.isAndroid ? "com.emart.customer" : "com.emart.customer.ios",
+                                userAgentPackageName: Platform.isAndroid ? "com.emart.customer" : "emart.app.customer",
                               ),
                               flutterMap.MarkerLayer(markers: controller.osmMarker),
                               if (controller.routePoints.isNotEmpty) flutterMap.PolylineLayer(polylines: [flutterMap.Polyline(points: controller.routePoints, strokeWidth: 5.0, color: Colors.blue)]),

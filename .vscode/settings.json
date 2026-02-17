@@ -1,3 +1,8 @@
 {
-    "dart.flutterSdkPath": "D:\\SetupFlutter\\flutter_3.38_5"
+    "dart.flutterSdkPath": "D:\\SetupFlutter\\flutter_3.38_5",
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": false,
+    "editor.formatOnCopy": false,
+    "dart.enableSdkFormatter": false
 }
