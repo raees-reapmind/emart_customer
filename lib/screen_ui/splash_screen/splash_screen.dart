@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
     return GetBuilder<SplashController>(
       init: SplashController(),
       builder: (controller) {
-        return Scaffold(backgroundColor: AppThemeData.surface, body: Center(child: Image.asset(AppAssets.icAppLogo, width: 120, height: 120)));
+        return Scaffold(backgroundColor: AppThemeData.surface, body: Center(child: Image.asset(AppAssets.appIcon, width: 120, height: 120)));
       },
     );
   }

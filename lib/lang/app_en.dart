@@ -71,7 +71,7 @@ const Map<String, String> enUS = {
   'Verifying OTP...': 'Verifying OTP...',
   'This user is disabled': 'This user is disabled',
   'Invalid OTP or Verification Failed': 'Invalid OTP or Verification Failed',
-  'eMart': 'eMart',
+  'eMart': 'Nexa',
   'All Your Needs in One App!': 'All Your Needs in One App!',
   'Explore Our Services': 'Explore Our Services',
   'Alert!': 'Alert!',

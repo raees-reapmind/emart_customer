@@ -5,6 +5,7 @@ class AppAssets {
   //images
   static const onBoardingBG = '${assetFromImagesPath}onboarding_bg.png';
   static const imgOnBoarding = '${assetFromImagesPath}img_onboarding.png';
+  static const appIcon = '${assetFromImagesPath}app_icon.png';
 
 
   //icons
