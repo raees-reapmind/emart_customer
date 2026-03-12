@@ -643,7 +643,9 @@ class FireStoreUtils {
       }
 
       fireStore.collection(CollectionName.settings).doc("googleMapKey").snapshots().listen((event) {
+        debugPrint("Google Map Key Listener: ${event.data()}");
         if (event.exists && event.data() != null) {
+          debugPrint("Google Map Key Updated: ${event.data()?["key"]}");
           Constant.mapAPIKey = event.data()?["key"] ?? "";
         }
       });
